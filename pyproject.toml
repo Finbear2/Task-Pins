@@ -1,0 +1,7 @@
+[tool.basedpyright]
+typeCheckingMode = "standard"
+reportMissingModuleSource = "none"
+reportUnknownMemberType = "none"
+reportUnknownParameterType = "none"
+reportUnknownArgumentType = "none"
+reportUnknownVariableType = "none"

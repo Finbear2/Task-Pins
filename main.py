@@ -10,7 +10,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Gtk4LayerShell', '1.0')
 
 from gi.repository import Gtk, Gdk
-from gi.repository import Gtk4LayerShell as LayerShell
+from gi.repository import Gtk4LayerShell as LayerShell  # pyright: ignore[reportAttributeAccessIssue]
 
 def onActivate(app):
     # Window boiler plate
@@ -46,8 +46,12 @@ def onActivate(app):
     ''')
 
     # Set the style
+    display = Gdk.Display.get_default()
+    if display is None:
+        raise RuntimeError("No GDK display available")
+
     Gtk.StyleContext.add_provider_for_display(
-        Gdk.Display.get_default(),
+        display,
         css,
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
     )
@@ -58,12 +62,6 @@ def onActivate(app):
         spacing=6,
     )
     card.add_css_class('overlay-card')
-
-    # WIDGET TIME
-    title = Gtk.Label(label='THIS IS A TEST')
-    subtitle = Gtk.Label(label='Fresh A Voc A Do')
-    card.append(title)
-    card.append(subtitle)
 
     window.set_child(card)
     window.present()
