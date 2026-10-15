@@ -11,12 +11,13 @@ gi.require_version('Gtk4LayerShell', '1.0')
 
 from gi.repository import Gtk, Gdk
 from gi.repository import Gtk4LayerShell as LayerShell  # pyright: ignore[reportAttributeAccessIssue]
+import cairo
 
 def onActivate(app):
     # Window boiler plate
     window = Gtk.ApplicationWindow(application=app)
     window.set_title('Task Pins')
-    window.set_default_size(750, 240)
+    window.set_default_size(1800, 200)
     window.set_decorated(False)
 
     # Put the window on an overlay layer
@@ -40,8 +41,8 @@ def onActivate(app):
         }
 
         .overlay-card {
-            background-color: rgba(25, 25, 35, 0.85);
-            padding: 14px;
+            background-color: rgba(25, 25, 35, 0);
+            padding: 16px;
         }
     ''')
 
@@ -56,15 +57,31 @@ def onActivate(app):
         Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
     )
 
-    # Put the shit in the container
+    
+    # Put the shit in the container. My overtime is unpaid.
     card = Gtk.Box(
-        orientation=Gtk.Orientation.VERTICAL,
+        orientation=Gtk.Orientation.HORIZONTAL,
         spacing=6,
     )
-    card.add_css_class('overlay-card')
+    card.add_css_class("overlay-card")
 
+    for i in range(5):
+        picture = Gtk.Picture.new_for_filename("items/Tag.svg")
+        picture.set_can_shrink(True)
+        picture.set_halign(Gtk.Align.START)
+        picture.set_valign(Gtk.Align.START)
+
+        # Put the container inside the card.
+        card.append(picture)
+
+    # The window gets ONE child. Just one.
     window.set_child(card)
     window.present()
+
+    # Empty input region: the overlay gets no pointer events.
+    region = cairo.Region(cairo.RectangleInt(0, 0, 0, 0))
+    window.get_surface().set_input_region(region)
+
 
 
 app = Gtk.Application(
